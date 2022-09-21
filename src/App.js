@@ -14,6 +14,8 @@ export const ACTIONS = {
 function reducer(state, {type, payload}) {
     switch (type) {
         case ACTIONS.ADD_DIGIT:
+            console.log(payload.digit)
+
             if (state.overwrite) {
                 return {
                     ...state,
@@ -24,7 +26,7 @@ function reducer(state, {type, payload}) {
             if (payload.digit === "0" && state.currentOperand === "0") {
                 return state
             }
-            if (payload.digit === "." && state.currentOperand.includes(".")) {
+            if (payload.digit === "," && state.currentOperand.includes(",")) {
                 return state
             }
 
@@ -121,15 +123,15 @@ function evaluate({currentOperand, previousOperand, operation}) {
     return computation.toString()
 }
 
-const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
+const INTEGER_FORMATTER = new Intl.NumberFormat("de-DE", {
     maximumFractionDigits: 0,
 })
 
 function formatOperand(operand) {
     if (operand == null) return
-    const [integer, decimal] = operand.split(".")
+    const [integer, decimal] = operand.split(",")
     if (decimal == null) return INTEGER_FORMATTER.format(integer)
-    return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
+    return `${INTEGER_FORMATTER.format(integer)},${decimal}`
 }
 
 function App() {
@@ -151,7 +153,7 @@ function App() {
                 AC
             </button>
             <button onClick={() => dispatch({type: ACTIONS.DELETE_DIGIT})}>
-                DEL
+                ⇍
             </button>
             <OperationButton operation="÷" dispatch={dispatch}/>
             <DigitButton digit="1" dispatch={dispatch}/>
@@ -166,7 +168,7 @@ function App() {
             <DigitButton digit="8" dispatch={dispatch}/>
             <DigitButton digit="9" dispatch={dispatch}/>
             <OperationButton operation="-" dispatch={dispatch}/>
-            <DigitButton digit="." dispatch={dispatch}/>
+            <DigitButton digit="," dispatch={dispatch}/>
             <DigitButton digit="0" dispatch={dispatch}/>
             <button className="span-two" onClick={() => dispatch({type: ACTIONS.EVALUATE})}>=</button>
         </div>
