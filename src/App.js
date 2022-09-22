@@ -14,8 +14,6 @@ export const ACTIONS = {
 function reducer(state, {type, payload}) {
     switch (type) {
         case ACTIONS.ADD_DIGIT:
-            console.log(payload.digit)
-
             if (state.overwrite) {
                 return {
                     ...state,
@@ -99,8 +97,8 @@ function reducer(state, {type, payload}) {
 }
 
 function evaluate({currentOperand, previousOperand, operation}) {
-    const prev = parseFloat(previousOperand)
-    const current = parseFloat(currentOperand)
+    const prev = parseFloat(previousOperand.replace(',', '.'))
+    const current = parseFloat(currentOperand.replace(',', '.'))
 
     if (isNaN(prev) || isNaN(current)) {
         return ""
@@ -120,6 +118,7 @@ function evaluate({currentOperand, previousOperand, operation}) {
             computation = prev * current
             break
     }
+    computation = Math.round((computation + Number.EPSILON) * 100) / 100
     return computation.toString()
 }
 
@@ -129,7 +128,8 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("de-DE", {
 
 function formatOperand(operand) {
     if (operand == null) return
-    const [integer, decimal] = operand.split(",")
+    operand = operand.replace(',', '.')
+    const [integer, decimal] = operand.split(".")
     if (decimal == null) return INTEGER_FORMATTER.format(integer)
     return `${INTEGER_FORMATTER.format(integer)},${decimal}`
 }
