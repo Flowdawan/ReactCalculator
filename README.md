@@ -1,5 +1,5 @@
 # calculator
-A simple sample web-based-react calculator application
+A simple sample web-based-react calculator application!
 
 # Getting Started with Create React App
 
